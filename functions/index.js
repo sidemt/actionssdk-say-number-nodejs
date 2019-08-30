@@ -14,14 +14,51 @@
 
 'use strict';
 
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+var firebase = require("firebase/app");
+
+// Add the Firebase products that you want to use
+require("firebase/auth");
+require("firebase/database");
+
 const functions = require('firebase-functions');
 const {actionssdk} = require('actions-on-google');
 
 const app = actionssdk({debug: true});
 
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "*****",
+  authDomain: "actionssdk-say-number-sample.firebaseapp.com",
+  databaseURL: "https://actionssdk-say-number-sample.firebaseio.com",
+  projectId: "actionssdk-say-number-sample",
+  storageBucket: "actionssdk-say-number-sample.appspot.com",
+  messagingSenderId: "*****",
+  appId: "*****"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// データベースでデータの読み書きを行うには、firebase.database.Reference のインスタンスが必要
+// Get a reference to the database service
+var database = firebase.database();
+var ref = database.ref("greeting/morning");
+
+var greetWord = "Hi!";
+
+// Attach an asynchronous callback to read the data
+ref.on("value", function(snapshot) {
+  console.log(snapshot.val());
+  greetWord = snapshot.val();
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
+
 app.intent('actions.intent.MAIN', (conv) => {
-  conv.ask('<speak>Hi! <break time="1"/> I can read out an ordinal like ' +
-    '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>');
+  conv.ask('<speak>' + greetWord + '<break time="1"/> ' +
+  'I can read out an ordinal like ' +
+  '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>');
 });
 
 app.intent('raw.input', (conv, input) => {

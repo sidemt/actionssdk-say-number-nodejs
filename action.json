@@ -36,11 +36,11 @@
   "conversations": {
     "convWelcome": {
       "name": "convWelcome",
-      "url": "YOUR_ENDPOINT_URL"
+      "url": "https://us-central1-actionssdk-say-number-sample.cloudfunctions.net/webhook"
     },
     "rawInput": {
       "name": "rawInput",
-      "url":"YOUR_ENDPOINT_URL"
+      "url":"https://us-central1-actionssdk-say-number-sample.cloudfunctions.net/webhook"
     }
   }
 }
