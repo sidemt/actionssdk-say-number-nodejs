@@ -48,14 +48,19 @@ var ref = database.ref("greeting/morning");
 var greetWord = "Hi!";
 
 // Attach an asynchronous callback to read the data
-ref.on("value", function(snapshot) {
-  console.log(snapshot.val());
-  greetWord = snapshot.val();
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code);
-});
+function readDb() {
+  ref.once("value", function(snapshot) {
+    console.log(snapshot.val());
+    greetWord = snapshot.val();
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+}
+
+readDb();
 
 app.intent('actions.intent.MAIN', (conv) => {
+  readDb();
   conv.ask('<speak>' + greetWord + '<break time="1"/> ' +
   'I can read out an ordinal like ' +
   '<say-as interpret-as="ordinal">123</say-as>. Say a number.</speak>');
